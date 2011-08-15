@@ -20,6 +20,7 @@ subtest "Successful Transactions" => sub {
 
     is($result->is_success, 1, "result of $method is success");
     is($result->message, "", "$method result has errors: $result->message");
+    is($result->transaction->credit_card->last_4, "1111");
   }
 };
 

@@ -42,8 +42,8 @@ subtest "Create:S2S" => sub {
     my $result = Net::Braintree::Customer->create($customer_with_cc_and_billing);
     ok $result->is_success, "customer s2s complex create successful";
     is($result->customer->first_name, "Johnny", "sets customer attributes (first name)");
-    use Data::Dumper; print Dumper($result->customer);
     is($result->customer->addresses->[0]->street_address, "2 E Main St", "sets deeply nested attributes");
+    is($result->customer->credit_cards->[0]->last_4, "1111");
   };
 
   subtest "with invalid attributes" => sub {
