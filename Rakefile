@@ -2,7 +2,7 @@ task :default => :test
 
 desc "update makefile"
 task :makefile do
-  sh 'perl Makefile.PL'
+  sh 'perl Makefile.PL && make'
 end
 
 task :test => ["makefile", "test:unit", "test:integration"]
@@ -27,8 +27,17 @@ task :clean do
   rm_f "MYMETA*"
 end
 
+task :strict_check do
+  Dir.glob(["lib/Net/**/*.pm"]) do |file|
+    unless File.read(file) =~ /Moose|strict/
+      puts "#{file} is not using Moose or strict"
+    end
+  end
+end
+
 task :package do
-  filename = "Net-Braintree-0.1.2"
+  version = File.read('lib/Net/Braintree.pm')[/\$VERSION = '([^']+)'/, 1]
+  filename = "Net-Braintree-#{version}"
 
   sh "git clean -dfx"
   FileUtils.mkdir_p("dist/#{filename}")
